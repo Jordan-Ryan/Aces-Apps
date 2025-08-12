@@ -27,6 +27,9 @@ export default function AppLayout() {
           </Link>
           <nav className="flex items-center gap-2">
             <NavLink to="/" className={({ isActive }) => navClass(isActive)}>
+              Focus
+            </NavLink>
+            <NavLink to="/dashboard" className={({ isActive }) => navClass(isActive)}>
               Dashboard
             </NavLink>
             <NavLink to="/apps" className={({ isActive }) => navClass(isActive)}>

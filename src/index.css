@@ -2,7 +2,7 @@
 
 /* Theme variables */
 :root {
-  --felt: #0F5132;
+  --felt: #0b1220; /* toned-down neutral background */
   --spade: #111827; /* gray-900 */
   --heart: #E11D48; /* rose-600 */
   --diamond: #0EA5E9; /* sky-500 */
@@ -14,9 +14,8 @@ html, body, #root {
 }
 
 body {
-  @apply bg-[color:var(--felt)] text-white antialiased;
-  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
-  background-size: 16px 16px;
+  @apply text-white antialiased;
+  background: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
