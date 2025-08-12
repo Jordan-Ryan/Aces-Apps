@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+/* Theme variables */
+:root {
+  --felt: #0F5132;
+  --spade: #111827; /* gray-900 */
+  --heart: #E11D48; /* rose-600 */
+  --diamond: #0EA5E9; /* sky-500 */
+  --club: #10B981; /* emerald-500 */
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-[color:var(--felt)] text-white antialiased;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.font-display { font-family: "Playfair Display", serif; }
+.font-accent { font-family: "Fredoka One", system-ui; }
+
+/* Card utilities */
+.card {
+  @apply rounded-xl shadow-lg bg-neutral-900/70 backdrop-blur border border-white/10;
+}
+.card-hover {
+  @apply transition transform hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-emerald-500/20;
+}
+
+/* Suit colors */
+.suit-spades { color: var(--spade); }
+.suit-hearts { color: var(--heart); }
+.suit-diamonds { color: var(--diamond); }
+.suit-clubs { color: var(--club); }
