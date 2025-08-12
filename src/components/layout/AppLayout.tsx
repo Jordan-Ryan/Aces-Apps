@@ -1,7 +1,19 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { Club, Diamond, Heart, Spade, PlusCircle } from 'lucide-react';
+import { useEffect } from 'react';
+import { useDeckStore } from '../../stores/useDeckStore';
+import { demoApps } from '../../utils/seed';
 
 export default function AppLayout() {
+  const apps = useDeckStore((s) => s.apps);
+  const seedApps = useDeckStore((s) => s.seedApps);
+
+  useEffect(() => {
+    if (apps.length === 0) {
+      seedApps(demoApps());
+    }
+  }, [apps.length, seedApps]);
+
   return (
     <div className="min-h-full flex flex-col">
       <header className="sticky top-0 z-40 backdrop-blur bg-black/30 border-b border-white/10">

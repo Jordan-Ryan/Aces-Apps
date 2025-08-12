@@ -18,6 +18,7 @@ type DeckState = {
   setFilter: (filter: Filter) => void;
   shuffle: () => void;
   sortBy: (key: 'suit' | 'cardValue' | 'progress') => void;
+  seedApps: (apps: AppModel[]) => void;
 };
 
 function generateDefaultApp(partial: Partial<AppModel>): AppModel {
@@ -56,6 +57,7 @@ export const useDeckStore = create<DeckState>((set, get) => ({
   apps: [],
   components: [],
   filter: {},
+  seedApps: (apps) => set({ apps }),
   addApp: (partial) => {
     const app = generateDefaultApp(partial);
     set((state) => ({ apps: [app, ...state.apps] }));
