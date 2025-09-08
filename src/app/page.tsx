@@ -1,11 +1,21 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Header } from '@/components/layout/Header'
 import { ProjectGrid } from '@/components/dashboard/ProjectGrid'
 import { SearchBar } from '@/components/dashboard/SearchBar'
 import { AddProjectButton } from '@/components/dashboard/AddProjectButton'
+import { AddProjectModal } from '@/components/project/AddProjectModal'
+import { eventBus } from '@/utils/eventBus'
 
 export default function Home() {
+  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false)
+
+  useEffect(() => {
+    const off = eventBus.on('open:add-project', () => setIsAddProjectModalOpen(true))
+    return () => { off() }
+  }, [])
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-void-900">
       <Header />
@@ -25,6 +35,10 @@ export default function Home() {
         
         <ProjectGrid />
         <AddProjectButton />
+        <AddProjectModal 
+          isOpen={isAddProjectModalOpen}
+          onClose={() => setIsAddProjectModalOpen(false)}
+        />
       </main>
     </div>
   )

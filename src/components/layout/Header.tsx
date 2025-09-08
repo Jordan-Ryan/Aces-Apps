@@ -1,11 +1,9 @@
 'use client'
 
-import { Search, User, Menu } from 'lucide-react'
+import { User } from 'lucide-react'
 import { ThemeSwitcher } from '@/components/themes/ThemeSwitcher'
-import { useState } from 'react'
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
     <header className="bg-white dark:bg-void-900 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -23,20 +21,6 @@ export function Header() {
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
-            <nav className="flex items-center space-x-6">
-              <a href="/" className="text-gray-700 dark:text-gray-300 hover:text-jewel-600 dark:hover:text-jewel-400 transition-colors">
-                Dashboard
-              </a>
-              <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-jewel-600 dark:hover:text-jewel-400 transition-colors">
-                Projects
-              </a>
-              <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-jewel-600 dark:hover:text-jewel-400 transition-colors">
-                Analytics
-              </a>
-            </nav>
-          </div>
 
           {/* Right side actions */}
           <div className="flex items-center space-x-4">
@@ -52,33 +36,12 @@ export function Header() {
               </span>
             </div>
 
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
           </div>
         </div>
 
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
-            <nav className="flex flex-col space-y-2">
-              <a href="/" className="px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-jewel-600 dark:hover:text-jewel-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
-                Dashboard
-              </a>
-              <a href="#" className="px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-jewel-600 dark:hover:text-jewel-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
-                Projects
-              </a>
-              <a href="#" className="px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-jewel-600 dark:hover:text-jewel-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
-                Analytics
-              </a>
-            </nav>
-          </div>
-        )}
       </div>
     </header>
   )
 }
+
+

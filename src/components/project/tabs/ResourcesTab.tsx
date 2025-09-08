@@ -1,7 +1,7 @@
 'use client'
 
 import { Project } from '@/types/Project'
-import { Users, Link, FileText, ExternalLink } from 'lucide-react'
+import { FileText, Link, ExternalLink, Download, Upload } from 'lucide-react'
 
 interface ResourcesTabProps {
   project: Project
@@ -10,92 +10,8 @@ interface ResourcesTabProps {
 }
 
 export function ResourcesTab({ project, isEditing, onUpdate }: ResourcesTabProps) {
-  const handleTeamChange = (index: number, value: string) => {
-    if (isEditing) {
-      const updatedTeam = [...project.team]
-      updatedTeam[index] = value
-      
-      onUpdate({
-        ...project,
-        team: updatedTeam
-      })
-    }
-  }
-
-  const addTeamMember = () => {
-    if (isEditing) {
-      onUpdate({
-        ...project,
-        team: [...project.team, 'New Team Member']
-      })
-    }
-  }
-
-  const removeTeamMember = (index: number) => {
-    if (isEditing && project.team.length > 1) {
-      const updatedTeam = project.team.filter((_, i) => i !== index)
-      onUpdate({
-        ...project,
-        team: updatedTeam
-      })
-    }
-  }
-
   return (
     <div className="space-y-8">
-      {/* Team Members */}
-      <div>
-        <h3 className="flex items-center space-x-2 text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          <Users className="w-5 h-5 text-jewel-600" />
-          <span>Team Members</span>
-        </h3>
-        
-        <div className="space-y-3">
-          {project.team.map((member, index) => (
-            <div key={index} className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-                <span className="text-jewel-600 dark:text-jewel-400 font-medium text-sm">
-                  {member.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              
-              {isEditing ? (
-                <div className="flex-1 flex items-center space-x-2">
-                  <input
-                    type="text"
-                    value={member}
-                    onChange={(e) => handleTeamChange(index, e.target.value)}
-                    className="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-accent-500 focus:border-transparent"
-                    placeholder="Team member name..."
-                  />
-                  {project.team.length > 1 && (
-                    <button
-                      onClick={() => removeTeamMember(index)}
-                      className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <span className="text-gray-700 dark:text-gray-300 font-medium">
-                  {member}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {isEditing && (
-          <button
-            onClick={addTeamMember}
-            className="mt-4 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
-            + Add Team Member
-          </button>
-        )}
-      </div>
-
       {/* Technology Stack */}
       <div>
         <h3 className="flex items-center space-x-2 text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -115,11 +31,11 @@ export function ResourcesTab({ project, isEditing, onUpdate }: ResourcesTabProps
         </div>
       </div>
 
-      {/* Quick Links */}
+      {/* Project Resources */}
       <div>
         <h3 className="flex items-center space-x-2 text-lg font-semibold text-gray-900 dark:text-white mb-4">
           <Link className="w-5 h-5 text-jewel-600" />
-          <span>Quick Links</span>
+          <span>Project Resources</span>
         </h3>
         
         <div className="space-y-3">
@@ -157,6 +73,78 @@ export function ResourcesTab({ project, isEditing, onUpdate }: ResourcesTabProps
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Import/Export */}
+      <div>
+        <h3 className="flex items-center space-x-2 text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <Download className="w-5 h-5 text-jewel-600" />
+          <span>Data Management</span>
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <button className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left">
+            <div className="flex items-center space-x-3">
+              <Download className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <div>
+                <p className="font-medium text-gray-900 dark:text-white">Export Project</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Download project data as JSON
+                </p>
+              </div>
+            </div>
+          </button>
+
+          <button className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left">
+            <div className="flex items-center space-x-3">
+              <Upload className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <div>
+                <p className="font-medium text-gray-900 dark:text-white">Import Data</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Import project data from file
+                </p>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Project Statistics */}
+      <div>
+        <h3 className="flex items-center space-x-2 text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <FileText className="w-5 h-5 text-jewel-600" />
+          <span>Project Statistics</span>
+        </h3>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              {project.technology.length}
+            </div>
+            <div className="text-sm text-blue-800 dark:text-blue-300">Technologies</div>
+          </div>
+          
+          <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+              {project.progress}%
+            </div>
+            <div className="text-sm text-green-800 dark:text-green-300">Progress</div>
+          </div>
+          
+          <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              {project.details.features.mustHave.length}
+            </div>
+            <div className="text-sm text-purple-800 dark:text-purple-300">Must-Have Features</div>
+          </div>
+          
+          <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+              {project.estimatedCost > 0 ? `$${project.estimatedCost.toLocaleString()}` : 'N/A'}
+            </div>
+            <div className="text-sm text-orange-800 dark:text-orange-300">Est. Cost</div>
           </div>
         </div>
       </div>

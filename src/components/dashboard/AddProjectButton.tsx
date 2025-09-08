@@ -3,6 +3,7 @@
 import { Plus } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { eventBus } from '@/utils/eventBus'
 
 export function AddProjectButton() {
   const [isHovered, setIsHovered] = useState(false)
@@ -14,6 +15,7 @@ export function AddProjectButton() {
       whileTap={{ scale: 0.95 }}
     >
       <button
+        onClick={() => eventBus.emit('open:add-project')}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className="bg-jewel-500 hover:bg-jewel-600 dark:bg-jewel-600 dark:hover:bg-jewel-700 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2"

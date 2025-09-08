@@ -2,11 +2,12 @@
 
 import { Project } from '@/types/Project'
 import { useState } from 'react'
+import { FileText, Code, DollarSign, Calendar, ExternalLink } from 'lucide-react'
 import { OverviewTab } from './tabs/OverviewTab'
-import { FeaturesTab } from './tabs/FeaturesTab'
-import { TechnicalTab } from './tabs/TechnicalTab'
-import { TimelineTab } from './tabs/TimelineTab'
-import { ResourcesTab } from './tabs/ResourcesTab'
+import { DevelopmentTab } from './tabs/DevelopmentTab'
+import { BusinessTab } from './tabs/BusinessTab'
+import { PlanningTab } from './tabs/PlanningTab'
+import { LinksTab } from './tabs/LinksTab'
 
 interface ProjectTabsProps {
   project: Project
@@ -15,11 +16,11 @@ interface ProjectTabsProps {
 }
 
 const tabs = [
-  { id: 'overview', label: 'Overview', icon: '📊' },
-  { id: 'features', label: 'Features', icon: '✨' },
-  { id: 'technical', label: 'Technical', icon: '⚙️' },
-  { id: 'timeline', label: 'Timeline', icon: '📅' },
-  { id: 'resources', label: 'Resources', icon: '📚' }
+  { id: 'overview', label: 'Overview', icon: FileText },
+  { id: 'development', label: 'Development', icon: Code },
+  { id: 'business', label: 'Business', icon: DollarSign },
+  { id: 'planning', label: 'Planning', icon: Calendar },
+  { id: 'links', label: 'Links', icon: ExternalLink }
 ]
 
 export function ProjectTabs({ project, isEditing, onUpdate }: ProjectTabsProps) {
@@ -29,14 +30,14 @@ export function ProjectTabs({ project, isEditing, onUpdate }: ProjectTabsProps) 
     switch (activeTab) {
       case 'overview':
         return <OverviewTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
-      case 'features':
-        return <FeaturesTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
-      case 'technical':
-        return <TechnicalTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
-      case 'timeline':
-        return <TimelineTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
-      case 'resources':
-        return <ResourcesTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
+      case 'development':
+        return <DevelopmentTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
+      case 'business':
+        return <BusinessTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
+      case 'planning':
+        return <PlanningTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
+      case 'links':
+        return <LinksTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
       default:
         return <OverviewTab project={project} isEditing={isEditing} onUpdate={onUpdate} />
     }
@@ -51,13 +52,13 @@ export function ProjectTabs({ project, isEditing, onUpdate }: ProjectTabsProps) 
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center ${
                 activeTab === tab.id
                   ? 'border-accent-500 text-accent-600 dark:text-accent-400'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500'
               }`}
             >
-              <span className="mr-2">{tab.icon}</span>
+              <tab.icon className="w-4 h-4 mr-2" />
               {tab.label}
             </button>
           ))}

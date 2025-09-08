@@ -42,14 +42,16 @@ export default function ProjectPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-void-900">
       <Header />
       <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-6">
-          <Link href="/" className="hover:text-jewel-600 dark:hover:text-jewel-400">
-            Dashboard
+        {/* Back Button */}
+        <div className="mb-6">
+          <Link 
+            href="/" 
+            className="inline-flex items-center space-x-2 text-jewel-600 dark:text-jewel-400 hover:text-jewel-700 dark:hover:text-jewel-300 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="font-medium">Back to Dashboard</span>
           </Link>
-          <span>/</span>
-          <span className="text-gray-900 dark:text-white">{project.name}</span>
-        </nav>
+        </div>
 
         <ProjectDetail project={project} />
       </div>

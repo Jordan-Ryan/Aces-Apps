@@ -50,9 +50,82 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
   const addProject = (projectData: Omit<Project, 'id'>) => {
     const newProject: Project = {
       ...projectData,
-      id: Date.now().toString()
+      id: generateProjectId(projectData.name),
+      // Ensure all required fields have default values
+      monetization: projectData.monetization || 'Free',
+      estimatedCost: projectData.estimatedCost || 0,
+      currentBlockers: projectData.currentBlockers || [],
+      nextMilestones: projectData.nextMilestones || [],
+      marketValidation: projectData.marketValidation || '',
+      competitorAnalysis: projectData.competitorAnalysis || '',
+      launchStrategy: projectData.launchStrategy || '',
+      details: {
+        ...projectData.details,
+        business: {
+          monetizationStrategy: '',
+          revenueModel: '',
+          targetMarketSize: '',
+          competitorAnalysis: '',
+          uniqueValueProposition: '',
+          pricingStrategy: '',
+          marketValidation: '',
+          businessRisks: [],
+          ...projectData.details.business
+        },
+        planning: {
+          currentBlockers: [],
+          nextActions: [],
+          weeklyMilestones: [],
+          learningRequirements: [],
+          estimatedCosts: {
+            developmentTools: 0,
+            servicesApis: 0,
+            appStoreFees: 0,
+            marketingBudget: 0,
+            total: 0
+          },
+          launchChecklist: [],
+          postLaunchPlan: '',
+          ...projectData.details.planning
+        },
+        links: {
+          development: {
+            github: '',
+            figma: '',
+            cursor: '',
+            gptSpace: '',
+            ...projectData.details.links.development
+          },
+          business: {
+            competitorResearch: [],
+            marketResearch: [],
+            analytics: '',
+            ...projectData.details.links.business
+          },
+          marketing: {
+            landingPage: '',
+            socialMedia: [],
+            pressKit: '',
+            ...projectData.details.links.marketing
+          },
+          legal: {
+            privacyPolicy: '',
+            termsOfService: '',
+            appStoreGuidelines: '',
+            ...projectData.details.links.legal
+          }
+        }
+      }
     }
     setProjects(prev => [newProject, ...prev])
+  }
+
+  const generateProjectId = (name: string): string => {
+    return name.toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
   }
 
   const updateProject = (id: string, updates: Partial<Project>) => {

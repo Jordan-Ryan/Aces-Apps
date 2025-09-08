@@ -126,8 +126,8 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
         {/* Project Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
-            <span className="text-gray-500 dark:text-gray-400">Team Size</span>
-            <p className="font-medium text-gray-900 dark:text-white">{project.team.length}</p>
+            <span className="text-gray-500 dark:text-gray-400">Monetization</span>
+            <p className="font-medium text-gray-900 dark:text-white">{project.monetization}</p>
           </div>
           <div>
             <span className="text-gray-500 dark:text-gray-400">Last Updated</span>

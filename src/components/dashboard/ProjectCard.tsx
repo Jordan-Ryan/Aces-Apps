@@ -86,9 +86,20 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {/* Footer */}
           <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-300">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1">
-                <Users className="w-4 h-4" />
-                <span>{project.team.length}</span>
+              <div className="flex items-center space-x-2">
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  project.monetization === 'Free' ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300' :
+                  project.monetization === 'Freemium' ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300' :
+                  project.monetization === 'Paid' ? 'bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300' :
+                  'bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300'
+                }`}>
+                  {project.monetization}
+                </span>
+                {project.currentBlockers && project.currentBlockers.length > 0 && (
+                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300">
+                    {project.currentBlockers.length} blocker{project.currentBlockers.length > 1 ? 's' : ''}
+                  </span>
+                )}
               </div>
               <div className="flex items-center space-x-1">
                 <Calendar className="w-4 h-4" />
