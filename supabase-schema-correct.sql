@@ -81,6 +81,9 @@ ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE project_files ENABLE ROW LEVEL SECURITY;
 
 -- Create policies (allowing all operations for now)
+-- Drop existing policies first to avoid conflicts
+DROP POLICY IF EXISTS "Allow all operations on projects" ON projects;
+DROP POLICY IF EXISTS "Allow all operations on project_files" ON project_files;
 CREATE POLICY "Allow all operations on projects" ON projects FOR ALL USING (true);
 CREATE POLICY "Allow all operations on project_files" ON project_files FOR ALL USING (true);
 
@@ -94,6 +97,8 @@ END;
 $$ language 'plpgsql';
 
 -- Create trigger to automatically update updated_at
+-- Drop existing trigger first to avoid conflicts
+DROP TRIGGER IF EXISTS update_projects_updated_at ON projects;
 CREATE TRIGGER update_projects_updated_at 
     BEFORE UPDATE ON projects 
     FOR EACH ROW 
@@ -104,6 +109,7 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('project-files', 'project-files', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Create storage policy
+-- Create storage policy (drop existing first to avoid conflicts)
+DROP POLICY IF EXISTS "Allow all operations on project-files bucket" ON storage.objects;
 CREATE POLICY "Allow all operations on project-files bucket" ON storage.objects 
 FOR ALL USING (bucket_id = 'project-files');
