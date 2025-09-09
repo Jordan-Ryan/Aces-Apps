@@ -34,23 +34,9 @@ export class DatabaseAPI {
 
     async createProject(projectData) {
         try {
-            // Convert the project data to match the simplified schema
-            const simplifiedData = {
-                name: projectData.name,
-                description: projectData.description,
-                status: projectData.status,
-                tech_stack: projectData.tech_stack,
-                completion_percentage: projectData.completion_percentage,
-                priority: projectData.priority,
-                overview: projectData.overview,
-                prompt_kit: projectData.prompt_kit,
-                sales_pre_launch: projectData.sales_pre_launch,
-                sales_post_launch: projectData.sales_post_launch
-            };
-
             const { data, error } = await supabase
                 .from(TABLES.PROJECTS)
-                .insert([simplifiedData])
+                .insert([projectData])
                 .select()
                 .single();
             
@@ -63,23 +49,9 @@ export class DatabaseAPI {
 
     async updateProject(id, projectData) {
         try {
-            // Convert the project data to match the simplified schema
-            const simplifiedData = {
-                name: projectData.name,
-                description: projectData.description,
-                status: projectData.status,
-                tech_stack: projectData.tech_stack,
-                completion_percentage: projectData.completion_percentage,
-                priority: projectData.priority,
-                overview: projectData.overview,
-                prompt_kit: projectData.prompt_kit,
-                sales_pre_launch: projectData.sales_pre_launch,
-                sales_post_launch: projectData.sales_post_launch
-            };
-
             const { data, error } = await supabase
                 .from(TABLES.PROJECTS)
-                .update(simplifiedData)
+                .update(projectData)
                 .eq('id', id)
                 .select()
                 .single();

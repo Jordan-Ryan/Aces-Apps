@@ -1151,43 +1151,43 @@ export class AcesApps {
             tech_stack: parseList(row.Tech_Stack),
             completion_percentage: parseInt(row.Completion_Percentage) || 0,
             priority: (row.Priority || 'medium').toLowerCase(),
-            overview: {
-                vision: convertBrToNewlines(row.Vision || ''),
-                problemStatement: convertBrToNewlines(row.Problem_Statement || ''),
-                targetAudience: convertBrToNewlines(row.Target_Audience || ''),
-                successMetrics: parseList(row.Success_Metrics),
-                requirements: parseList(row.Requirements),
-                architecture: convertBrToNewlines(row.Architecture || ''),
-                timeline: parseTimeline(row.Timeline_Phases),
-                resources: convertBrToNewlines(row.Resources || '')
-            },
-            prompt_kit: {
-                specifications: convertBrToNewlines(row.Specifications || ''),
-                acceptanceCriteria: parseList(row.Acceptance_Criteria),
-                sampleData: convertBrToNewlines(row.Sample_Data || ''),
-                codingStandards: parseList(row.Coding_Standards),
-                apiSpecs: parseList(row.API_Specs),
-                testingStrategy: convertBrToNewlines(row.Testing_Strategy || ''),
-                security: convertBrToNewlines(row.Security_Requirements || '')
-            },
-            sales_pre_launch: {
-                executiveSummary: convertBrToNewlines(row.Executive_Summary || ''),
-                marketAnalysis: convertBrToNewlines(row.Market_Analysis || ''),
-                valueProposition: convertBrToNewlines(row.Value_Proposition || ''),
-                features: parseList(row.Features_List),
-                pricing: parsePricing(row.Pricing_Model),
-                timeline: convertBrToNewlines(row.Development_Timeline || ''),
-                riskAssessment: convertBrToNewlines(row.Risk_Assessment || '')
-            },
-            sales_post_launch: {
-                demos: convertBrToNewlines(row.Demo_Links || ''),
-                caseStudies: parseCaseStudies(row.Case_Studies),
-                metrics: parseMetrics(row.Success_Metrics_Achieved),
-                testimonials: parseTestimonials(row.Customer_Testimonials),
-                roiCalculator: convertBrToNewlines(row.ROI_Calculator || ''),
-                differentiation: parseList(row.Competitive_Differentiation),
-                nextSteps: convertBrToNewlines(row.Next_Steps || '')
-            }
+            
+            // Overview fields
+            vision: convertBrToNewlines(row.Vision || ''),
+            problem_statement: convertBrToNewlines(row.Problem_Statement || ''),
+            target_audience: convertBrToNewlines(row.Target_Audience || ''),
+            success_metrics: parseList(row.Success_Metrics),
+            requirements: parseList(row.Requirements),
+            architecture: convertBrToNewlines(row.Architecture || ''),
+            timeline_phases: parseTimeline(row.Timeline_Phases),
+            resources: convertBrToNewlines(row.Resources || ''),
+            
+            // Prompt Kit fields
+            specifications: convertBrToNewlines(row.Specifications || ''),
+            acceptance_criteria: parseList(row.Acceptance_Criteria),
+            sample_data: convertBrToNewlines(row.Sample_Data || ''),
+            coding_standards: parseList(row.Coding_Standards),
+            api_specs: parseList(row.API_Specs),
+            testing_strategy: convertBrToNewlines(row.Testing_Strategy || ''),
+            security_requirements: convertBrToNewlines(row.Security_Requirements || ''),
+            
+            // Sales Pre-Launch fields
+            executive_summary: convertBrToNewlines(row.Executive_Summary || ''),
+            market_analysis: convertBrToNewlines(row.Market_Analysis || ''),
+            value_proposition: convertBrToNewlines(row.Value_Proposition || ''),
+            features_list: parseList(row.Features_List),
+            pricing_model: parsePricing(row.Pricing_Model),
+            development_timeline: convertBrToNewlines(row.Development_Timeline || ''),
+            risk_assessment: convertBrToNewlines(row.Risk_Assessment || ''),
+            
+            // Sales Post-Launch fields
+            demo_links: parseList(row.Demo_Links),
+            case_studies: parseCaseStudies(row.Case_Studies),
+            success_metrics_achieved: parseMetrics(row.Success_Metrics_Achieved),
+            customer_testimonials: parseTestimonials(row.Customer_Testimonials),
+            roi_calculator: convertBrToNewlines(row.ROI_Calculator || ''),
+            competitive_differentiation: parseList(row.Competitive_Differentiation),
+            next_steps: convertBrToNewlines(row.Next_Steps || '')
         };
 
         return project;
