@@ -2199,4 +2199,4 @@ export class AcesApps {
 }
 
 // Initialize the application
-const app = new PromptFlowApp();
+const app = new AcesApps();
