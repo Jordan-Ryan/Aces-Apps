@@ -181,19 +181,19 @@ export class AcesApps {
                 <td class="progress-col">
                     <div class="progress-container">
                         <div class="progress-bar-inline">
-                            <div class="progress-fill-inline" style="width: ${project.completionPercentage}%"></div>
+                            <div class="progress-fill-inline" style="width: ${project.completion_percentage || 0}%"></div>
                         </div>
-                        <span class="progress-text">${project.completionPercentage}%</span>
+                        <span class="progress-text">${project.completion_percentage || 0}%</span>
                     </div>
                 </td>
                 <td class="tech-col">
                     <div class="tech-pills">
-                        ${project.techStack.slice(0, 2).map(tech => `<span class="tech-pill">${tech}</span>`).join('')}
-                        ${project.techStack.length > 2 ? `<span class="tech-pill">+${project.techStack.length - 2}</span>` : ''}
+                        ${(project.tech_stack || []).slice(0, 2).map(tech => `<span class="tech-pill">${tech}</span>`).join('')}
+                        ${(project.tech_stack || []).length > 2 ? `<span class="tech-pill">+${(project.tech_stack || []).length - 2}</span>` : ''}
                     </div>
                 </td>
                 <td class="modified-col">
-                    <span class="text-muted">${this.formatDate(project.lastModified)}</span>
+                    <span class="text-muted">${this.formatDate(project.updated_at || project.created_at)}</span>
                 </td>
                 <td class="actions-col">
                     <div class="actions-cell">
@@ -277,7 +277,7 @@ export class AcesApps {
         document.getElementById('projectDetailTitle').textContent = this.currentProject.name;
         document.getElementById('projectDetailStatus').textContent = this.currentProject.status;
         document.getElementById('projectDetailStatus').className = `status-badge ${this.currentProject.status}`;
-        document.getElementById('projectDetailProgress').textContent = `${this.currentProject.completionPercentage}% Complete`;
+        document.getElementById('projectDetailProgress').textContent = `${this.currentProject.completion_percentage || 0}% Complete`;
 
         // Render overview tab
         this.renderOverviewTab();
@@ -1862,8 +1862,8 @@ export class AcesApps {
         });
         project.salesPackPre.pricing = pricing;
         
-        // Update last modified date
-        project.lastModified = new Date().toISOString().split('T')[0];
+        // Update last modified date (handled by database trigger)
+        // project.updated_at is automatically updated by the database trigger
         
         // Update the projects array
         const projectIndex = this.projects.findIndex(p => p.id === project.id);
@@ -1916,38 +1916,38 @@ export class AcesApps {
             project.name,
             project.status,
             project.description,
-            project.techStack.join('; '),
-            project.completionPercentage,
+            (project.tech_stack || []).join('; '),
+            project.completion_percentage || 0,
             project.priority,
-            project.overview.vision,
-            project.overview.problemStatement,
-            project.overview.targetAudience,
-            project.overview.successMetrics.join('; '),
-            project.overview.requirements.join('; '),
-            project.overview.architecture,
-            project.overview.timeline.map(t => `${t.phase}: ${t.duration} (${t.status})`).join('; '),
-            project.overview.resources,
-            project.promptKit.specifications,
-            project.promptKit.acceptanceCriteria.join('; '),
-            project.promptKit.sampleData,
-            project.promptKit.codingStandards.join('; '),
-            project.promptKit.apiSpecs.join('; '),
-            project.promptKit.testingStrategy,
-            project.promptKit.security,
-            project.salesPackPre.executiveSummary,
-            project.salesPackPre.marketAnalysis,
-            project.salesPackPre.valueProposition,
-            project.salesPackPre.features.join('; '),
-            Object.entries(project.salesPackPre.pricing).map(([k, v]) => `${k}: ${v}`).join('; '),
-            project.salesPackPre.timeline,
-            project.salesPackPre.riskAssessment,
-            project.salesPackPost.demos,
-            project.salesPackPost.caseStudies.map(c => `${c.client}: ${c.result}`).join('; '),
-            project.salesPackPost.metrics.map(m => `${m.label}: ${m.value}`).join('; '),
-            project.salesPackPost.testimonials.map(t => `"${t.quote}" - ${t.author}`).join('; '),
-            project.salesPackPost.roiCalculator,
-            project.salesPackPost.differentiation.join('; '),
-            project.salesPackPost.nextSteps
+            project.vision || '',
+            project.problem_statement || '',
+            project.target_audience || '',
+            (project.success_metrics || []).join('; '),
+            (project.requirements || []).join('; '),
+            project.architecture || '',
+            Array.isArray(project.timeline_phases) ? project.timeline_phases.map(t => `${t.phase}: ${t.duration} (${t.status})`).join('; ') : '',
+            project.resources || '',
+            project.specifications || '',
+            (project.acceptance_criteria || []).join('; '),
+            project.sample_data || '',
+            (project.coding_standards || []).join('; '),
+            (project.api_specs || []).join('; '),
+            project.testing_strategy || '',
+            project.security_requirements || '',
+            project.executive_summary || '',
+            project.market_analysis || '',
+            project.value_proposition || '',
+            (project.features_list || []).join('; '),
+            project.pricing_model ? Object.entries(project.pricing_model).map(([k, v]) => `${k}: ${v}`).join('; ') : '',
+            project.development_timeline || '',
+            project.risk_assessment || '',
+            (project.demo_links || []).join('; '),
+            Array.isArray(project.case_studies) ? project.case_studies.map(c => `${c.client}: ${c.result}`).join('; ') : '',
+            Array.isArray(project.success_metrics_achieved) ? project.success_metrics_achieved.map(m => `${m.label}: ${m.value}`).join('; ') : '',
+            Array.isArray(project.customer_testimonials) ? project.customer_testimonials.map(t => `"${t.quote}" - ${t.author}`).join('; ') : '',
+            project.roi_calculator || '',
+            (project.competitive_differentiation || []).join('; '),
+            project.next_steps || ''
         ]);
 
         return [headers, ...rows].map(row => 
@@ -2126,9 +2126,7 @@ export class AcesApps {
             id: Date.now().toString(),
             name: `${project.name} (Copy)`,
             status: 'idea',
-            completionPercentage: 0,
-            createdDate: new Date().toISOString().split('T')[0],
-            lastModified: new Date().toISOString().split('T')[0]
+            completion_percentage: 0
         };
         
         this.projects.push(clonedProject);
