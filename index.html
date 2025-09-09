@@ -346,6 +346,11 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
+    <script type="module">
+        import { AcesApps } from './script.js';
+        const app = new AcesApps();
+        window.app = app; // Make app globally available for onclick handlers
+    </script>
 </body>
 </html>

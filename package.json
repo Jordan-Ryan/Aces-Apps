@@ -1,0 +1,27 @@
+{
+  "name": "aces-apps",
+  "version": "1.0.0",
+  "description": "Modern SaaS-style Prompt Engineering Portfolio Platform",
+  "type": "module",
+  "main": "script.js",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": [
+    "prompt-engineering",
+    "portfolio",
+    "saas",
+    "supabase",
+    "javascript"
+  ],
+  "author": "Jordan Ryan",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

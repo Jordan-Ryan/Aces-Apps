@@ -1,0 +1,109 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+Cursor Project Rules for Prompt Engineering Portfolio SaaS App
+1. Project Overview
+Goal: Build a professional, scalable, responsive Single Page Application (SPA) for managing prompt engineering projects with a modern SaaS feel inspired by Jira, Atlassian, and Slack.
+
+Users: Prompt engineers, project managers, and stakeholders who want to document, manage, and showcase their prompt engineering projects and sales collateral.
+
+Core Value: A single source of truth with rich content presentation, seamless navigation, and strong project lifecycle workflows.
+
+2. UI/UX Design Rules
+Use a three-pane layout:
+
+Left collapsible sidebar for project navigation (grouped by status)
+
+Top header bar with breadcrumbs, search, user controls
+
+Main content area with tabbed project detail pages
+
+Follow modern SaaS design principles: clean typography, generous spacing, subtle borders, minimal shadows, and accessible color palette (Atlassian blues).
+
+Sidebar should contain project lists categorized by status (Current, Completed, Ideas) with inline progress bars, status indicators, and hover states.
+
+The dashboard view uses a sortable, filterable table with inline project actions such as edit, clone, and delete.
+
+The project detail page:
+
+Full page layout with sticky horizontal tabs labeled Overview, Prompt Kit, Sales Pre-Launch, Sales Post-Launch, and Files.
+
+Content sections use headings, bullet lists, code blocks with syntax highlighting, collapsible subsections, and clean data tables.
+
+Key metrics and timelines are visually emphasized with progress bars, icons, and callouts.
+
+Include inline and toggle edit modes for efficient content updates.
+
+Smooth, subtle animations and transitions on navigation and content changes.
+
+Responsive design that adapts perfectly to desktop, tablet, and mobile screens.
+
+3. Data and State Management
+Use a robust state management approach to:
+
+Store project list and detailed project info.
+
+Manage sidebar collapsed state and current selected project/tab state.
+
+Support CRUD operations on projects, inline editing of all content, and bulk CSV import/export (pipe-delimited).
+
+Persist data in local storage or equivalent for offline-first behavior during development.
+
+Support import of projects from pipe-delimited CSV with validation and error messages.
+
+Create data models for projects with nested structures for overview, prompt kit, sales packs, and file metadata.
+
+4. Navigation and Routing
+Implement client-side routing with clean URLs reflecting current view:
+
+/dashboard for main project list
+
+/project/:id for project detail with query string or hash for active tab
+
+Breadcrumb navigation in top header updates dynamically based on current route.
+
+Sidebar project selection updates routing and main content view.
+
+Back/forward browser buttons work intuitively.
+
+5. Interactive Features
+Inline editing enabled via click-to-edit content areas; toggle edit mode globally per project view.
+
+Auto-save edits to state and persistence store.
+
+Bulk actions on project list: multi-select, bulk delete, bulk export.
+
+Full keyboard navigation and express shortcuts for power users.
+
+Drag & drop file upload area in Files tab, with file type validation and previews.
+
+Copy-to-clipboard buttons for code sections and specs.
+
+Collapsible subsections for lengthy content areas to avoid information overload.
+
+6. Styling and Theming
+Follow accessibility best practices (contrast, keyboard focus, ARIA roles).
+
+Implement light and dark mode toggles with smooth transition.
+
+Use consistent spacing units and scalable font sizes for clarity.
+
+Use Atlassian-inspired colors and subtle gradients for depth without heaviness.
+
+Icons from FontAwesome or similar for visual cues (status badges, actions).
+
+7. Development Workflow for Cursor
+Break down features into modular segments (sidebar, header, dashboard, project detail tabs).
+
+Create reusable components for project cards, status badges, progress bars, tabs, collapsibles, code blocks, file lists.
+
+Use iterative prompt engineering to generate each feature component separately before integrating.
+
+Use thorough unit and integration tests for each module to ensure robustness.
+
+Use a prompt template library for code blocks, tables, and style rules to keep consistency.
+
+Document component props and expected behaviors clearly in prompts.
+

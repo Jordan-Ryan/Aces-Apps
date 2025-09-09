@@ -1,21 +1,18 @@
-// Aces Apps - Prompt Engineering Portfolio Platform
-// Main application logic with Supabase integration
+// PromptFlow - Prompt Engineering Portfolio Platform
+// Main application logic
 
-import { DatabaseAPI } from './database-api.js';
-
-export class AcesApps {
+class PromptFlowApp {
     constructor() {
         this.projects = [];
         this.currentProject = null;
         this.currentView = 'dashboard';
         this.editingMode = false;
-        this.db = new DatabaseAPI();
         
         this.init();
     }
 
-    async init() {
-        await this.loadProjects();
+    init() {
+        this.loadSampleData();
         this.setupEventListeners();
         this.initTheme();
         this.renderDashboard();
@@ -35,19 +32,196 @@ export class AcesApps {
         }
     }
 
-    // Load projects from Supabase
-    async loadProjects() {
-        try {
-            this.projects = await this.db.getProjects();
-            console.log('Loaded projects:', this.projects.length);
-        } catch (error) {
-            console.error('Error loading projects:', error);
-            this.projects = [];
-        }
+    // Sample data
+    loadSampleData() {
+        this.projects = [
+            {
+                id: '1',
+                name: 'AI Fitness Tracker',
+                status: 'current',
+                description: 'AI-powered fitness tracking with personalized recommendations',
+                techStack: ['React', 'Python', 'TensorFlow', 'AWS'],
+                completionPercentage: 65,
+                createdDate: '2025-08-15',
+                lastModified: '2025-09-08',
+                priority: 'high',
+                overview: {
+                    vision: 'Create an AI-powered fitness tracking application that provides personalized workout recommendations and nutrition guidance based on user goals and preferences.',
+                    problemStatement: 'Current fitness apps lack personalization and don\'t adapt to individual user needs, leading to low engagement and poor results.',
+                    targetAudience: 'Fitness enthusiasts aged 25-45 who want personalized guidance and tracking.',
+                    successMetrics: ['User retention > 80%', 'Average session time > 15 minutes', 'User satisfaction score > 4.5/5'],
+                    requirements: ['Real-time workout tracking', 'AI recommendation engine', 'Nutrition database integration', 'Social features'],
+                    architecture: 'Microservices architecture with React frontend, Python backend, TensorFlow ML models, and AWS infrastructure.',
+                    timeline: [
+                        { phase: 'Phase 1: MVP', duration: '3 months', status: 'in-progress' },
+                        { phase: 'Phase 2: AI Features', duration: '2 months', status: 'pending' },
+                        { phase: 'Phase 3: Launch', duration: '1 month', status: 'pending' }
+                    ],
+                    resources: 'Team of 5 developers, 1 ML engineer, 1 designer, and $50k budget.'
+                },
+                promptKit: {
+                    specifications: 'Build a React-based fitness tracking app with AI recommendations using Python backend and TensorFlow.',
+                    acceptanceCriteria: ['App loads in < 3 seconds', 'AI recommendations are 90% accurate', 'Works on mobile and desktop'],
+                    sampleData: '{"user": {"id": 1, "goals": ["weight_loss"], "fitness_level": "intermediate"}, "workout": {"type": "cardio", "duration": 30, "calories": 300}}',
+                    codingStandards: ['Use TypeScript for frontend', 'Follow PEP 8 for Python', 'Write unit tests for all functions'],
+                    apiSpecs: ['POST /api/workouts', 'GET /api/recommendations', 'PUT /api/user/profile'],
+                    testingStrategy: 'Unit tests for all components, integration tests for API endpoints, E2E tests for user flows.',
+                    security: 'JWT authentication, HTTPS only, input validation, rate limiting.'
+                },
+                salesPackPre: {
+                    executiveSummary: 'AI Fitness Tracker is a revolutionary fitness app that uses machine learning to provide personalized workout and nutrition recommendations.',
+                    marketAnalysis: 'Fitness app market is $4.4B and growing 13.7% annually. Opportunity in personalized AI recommendations.',
+                    valueProposition: 'Increase workout effectiveness by 40% through AI-powered personalization.',
+                    features: ['AI workout recommendations', 'Nutrition tracking', 'Progress analytics', 'Social challenges'],
+                    pricing: { freemium: 'Free', premium: '$9.99/month' },
+                    timeline: '6 months to market launch',
+                    riskAssessment: 'Competition from established players, user adoption challenges, AI accuracy concerns.'
+                },
+                salesPackPost: {
+                    demos: 'Live demo available at demo.aifitnesstracker.com',
+                    caseStudies: [
+                        { client: 'Fitness First Gym', result: '40% increase in member engagement' },
+                        { client: 'Personal Trainer Pro', result: '60% more client retention' }
+                    ],
+                    metrics: [
+                        { label: 'User Retention', value: '85%', benchmark: '23% industry' },
+                        { label: 'App Store Rating', value: '4.7/5', benchmark: '3.8/5 average' }
+                    ],
+                    testimonials: [
+                        { quote: 'This app changed my fitness journey completely!', author: 'Sarah Johnson' },
+                        { quote: 'The AI recommendations are spot on.', author: 'Mike Chen' }
+                    ],
+                    roiCalculator: 'ROI of 300% within 12 months for gym partners.',
+                    differentiation: ['Advanced AI algorithms', 'Real-time adaptation', 'Comprehensive nutrition tracking'],
+                    nextSteps: 'Expand to corporate wellness programs and healthcare partnerships.'
+                },
+                files: [
+                    { name: 'Technical Specs.pdf', type: 'pdf', size: '2.1 MB', date: '2025-09-01', url: '/files/tech-specs.pdf' },
+                    { name: 'UI Mockups.fig', type: 'figma', size: '5.3 MB', date: '2025-08-28', url: '/files/mockups.fig' }
+                ]
+            },
+            {
+                id: '2',
+                name: 'E-commerce Dashboard',
+                status: 'completed',
+                description: 'Analytics dashboard for e-commerce businesses',
+                techStack: ['Vue.js', 'Node.js', 'MongoDB', 'Chart.js'],
+                completionPercentage: 100,
+                createdDate: '2025-06-01',
+                lastModified: '2025-08-30',
+                priority: 'medium',
+                overview: {
+                    vision: 'Comprehensive analytics dashboard for e-commerce businesses to track sales, inventory, and customer behavior.',
+                    problemStatement: 'E-commerce businesses lack integrated analytics tools to make data-driven decisions.',
+                    targetAudience: 'E-commerce business owners and managers who need actionable insights.',
+                    successMetrics: ['Dashboard load time < 2 seconds', 'User adoption > 70%', 'Customer satisfaction > 4.0/5'],
+                    requirements: ['Real-time sales tracking', 'Inventory management', 'Customer analytics', 'Custom reports'],
+                    architecture: 'Vue.js SPA with Node.js API, MongoDB database, and Chart.js for visualizations.',
+                    timeline: [
+                        { phase: 'Phase 1: Core Features', duration: '2 months', status: 'completed' },
+                        { phase: 'Phase 2: Advanced Analytics', duration: '1 month', status: 'completed' },
+                        { phase: 'Phase 3: Launch', duration: '2 weeks', status: 'completed' }
+                    ],
+                    resources: 'Team of 3 developers and $25k budget.'
+                },
+                promptKit: {
+                    specifications: 'Build a Vue.js dashboard with Node.js backend for e-commerce analytics.',
+                    acceptanceCriteria: ['Dashboard loads in < 2 seconds', 'Real-time data updates', 'Mobile responsive'],
+                    sampleData: '{"sales": {"today": 1250, "yesterday": 1100}, "inventory": {"low_stock": 5, "out_of_stock": 2}}',
+                    codingStandards: ['Use Vue 3 Composition API', 'Follow REST API conventions', 'Write comprehensive tests'],
+                    apiSpecs: ['GET /api/sales', 'GET /api/inventory', 'POST /api/reports'],
+                    testingStrategy: 'Unit tests for components, integration tests for API, visual regression tests.',
+                    security: 'OAuth 2.0 authentication, data encryption, audit logging.'
+                },
+                salesPackPre: {
+                    executiveSummary: 'E-commerce Dashboard provides comprehensive analytics for online businesses to optimize sales and operations.',
+                    marketAnalysis: 'E-commerce analytics market is $2.1B and growing 15% annually.',
+                    valueProposition: 'Increase sales by 25% through data-driven insights and optimization.',
+                    features: ['Real-time sales tracking', 'Inventory management', 'Customer analytics', 'Custom reports'],
+                    pricing: { freemium: 'Free for < 1000 orders/month', premium: '$29.99/month' },
+                    timeline: '3.5 months to market launch',
+                    riskAssessment: 'Competition from established analytics platforms, integration complexity.'
+                },
+                salesPackPost: {
+                    demos: 'Live demo at demo.ecommercedashboard.com',
+                    caseStudies: [
+                        { client: 'Fashion Store Inc', result: '30% increase in sales' },
+                        { client: 'Electronics Hub', result: '50% reduction in stockouts' }
+                    ],
+                    metrics: [
+                        { label: 'Customer Satisfaction', value: '4.2/5', benchmark: '3.5/5 average' },
+                        { label: 'Uptime', value: '99.9%', benchmark: '99.5% industry' }
+                    ],
+                    testimonials: [
+                        { quote: 'Game changer for our business!', author: 'Lisa Wang' },
+                        { quote: 'Finally, analytics that make sense.', author: 'David Rodriguez' }
+                    ],
+                    roiCalculator: 'Average ROI of 250% within 6 months.',
+                    differentiation: ['Real-time updates', 'Custom report builder', 'Mobile-first design'],
+                    nextSteps: 'Add AI-powered insights and predictive analytics.'
+                },
+                files: [
+                    { name: 'User Manual.pdf', type: 'pdf', size: '1.8 MB', date: '2025-08-15', url: '/files/user-manual.pdf' },
+                    { name: 'API Documentation.pdf', type: 'pdf', size: '3.2 MB', date: '2025-08-10', url: '/files/api-docs.pdf' }
+                ]
+            },
+            {
+                id: '3',
+                name: 'Smart Home Hub',
+                status: 'idea',
+                description: 'Centralized control system for smart home devices',
+                techStack: ['React Native', 'Python', 'MQTT', 'Raspberry Pi'],
+                completionPercentage: 5,
+                createdDate: '2025-09-01',
+                lastModified: '2025-09-01',
+                priority: 'low',
+                overview: {
+                    vision: 'Create a unified smart home control system that integrates all IoT devices through a single interface.',
+                    problemStatement: 'Smart home devices are fragmented across different platforms and apps, making management difficult.',
+                    targetAudience: 'Tech-savvy homeowners who want centralized smart home control.',
+                    successMetrics: ['Device compatibility > 95%', 'Response time < 500ms', 'User satisfaction > 4.5/5'],
+                    requirements: ['Device discovery and pairing', 'Unified control interface', 'Automation rules', 'Voice control'],
+                    architecture: 'React Native app with Python backend, MQTT for device communication, and Raspberry Pi hub.',
+                    timeline: [
+                        { phase: 'Phase 1: Research', duration: '1 month', status: 'in-progress' },
+                        { phase: 'Phase 2: MVP', duration: '3 months', status: 'pending' },
+                        { phase: 'Phase 3: Advanced Features', duration: '2 months', status: 'pending' }
+                    ],
+                    resources: 'Solo project with $10k budget for hardware and development.'
+                },
+                promptKit: {
+                    specifications: 'Build a React Native app with Python backend for smart home device control.',
+                    acceptanceCriteria: ['Supports 50+ device types', 'Response time < 500ms', 'Works offline'],
+                    sampleData: '{"devices": [{"id": 1, "type": "light", "name": "Living Room Light", "status": "on"}]}',
+                    codingStandards: ['Use TypeScript', 'Follow MQTT best practices', 'Implement proper error handling'],
+                    apiSpecs: ['GET /api/devices', 'POST /api/devices/{id}/control', 'GET /api/automations'],
+                    testingStrategy: 'Unit tests for all components, integration tests with real devices, performance testing.',
+                    security: 'Device authentication, encrypted communication, secure pairing process.'
+                },
+                salesPackPre: {
+                    executiveSummary: 'Smart Home Hub unifies all smart devices under one intuitive control system.',
+                    marketAnalysis: 'Smart home market is $84B and growing 11% annually. Opportunity in device integration.',
+                    valueProposition: 'Simplify smart home management and reduce app clutter by 90%.',
+                    features: ['Universal device control', 'Automation rules', 'Voice control', 'Energy monitoring'],
+                    pricing: { freemium: 'Free for 5 devices', premium: '$4.99/month' },
+                    timeline: '6 months to market launch',
+                    riskAssessment: 'Device compatibility challenges, hardware costs, user adoption in competitive market.'
+                },
+                salesPackPost: {
+                    demos: 'Prototype demo available upon request',
+                    caseStudies: [],
+                    metrics: [],
+                    testimonials: [],
+                    roiCalculator: 'Projected ROI of 200% within 18 months.',
+                    differentiation: ['Universal compatibility', 'Offline functionality', 'Open source platform'],
+                    nextSteps: 'Complete market research and build MVP prototype.'
+                },
+                files: [
+                    { name: 'Market Research.pdf', type: 'pdf', size: '1.2 MB', date: '2025-09-01', url: '/files/market-research.pdf' }
+                ]
+            }
+        ];
     }
-
-    // Sample data (for fallback/testing) - REMOVED
-    // All data now comes from Supabase database
 
     // Event listeners
     setupEventListeners() {
@@ -477,7 +651,7 @@ export class AcesApps {
                                 <button class="btn btn-sm btn-secondary" onclick="window.open('${file.url}', '_blank')">
                                     <i class="fas fa-download"></i>
                                 </button>
-                                <button class="btn btn-sm btn-danger" onclick="app.removeFile('${file.id}')">
+                                <button class="btn btn-sm btn-danger" onclick="app.removeFile('${file.name}')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -566,16 +740,9 @@ export class AcesApps {
         return 'file';
     }
 
-    async removeFile(fileId) {
-        try {
-            await this.db.deleteFile(fileId);
-            this.currentProject.files = this.currentProject.files.filter(file => file.id !== fileId);
-            this.renderFilesTab();
-            console.log('File deleted from database:', fileId);
-        } catch (error) {
-            console.error('Error deleting file from database:', error);
-            alert('Failed to delete file. Please try again.');
-        }
+    removeFile(fileName) {
+        this.currentProject.files = this.currentProject.files.filter(file => file.name !== fileName);
+        this.renderFilesTab();
     }
 
     getFileIcon(type) {
@@ -1194,16 +1361,19 @@ export class AcesApps {
     }
 
     // Project management functions
-    async createNewProject() {
+    createNewProject() {
         const name = prompt('Enter project name:');
         if (!name) return;
         
-        const newProjectData = {
+        const newProject = {
+            id: Date.now().toString(),
             name: name,
             status: 'idea',
             description: 'New project description',
-            tech_stack: [],
-            completion_percentage: 0,
+            techStack: [],
+            completionPercentage: 0,
+            createdDate: new Date().toISOString().split('T')[0],
+            lastModified: new Date().toISOString().split('T')[0],
             priority: 'medium',
             overview: {
                 vision: '',
@@ -1245,20 +1415,14 @@ export class AcesApps {
             files: []
         };
         
-        try {
-            const newProject = await this.db.createProject(newProjectData);
-            this.projects.push(newProject);
-            this.renderDashboard();
-            this.viewProject(newProject.id);
-            
-            // Automatically enter edit mode for new project
-            setTimeout(() => {
-                this.editProject(newProject.id);
-            }, 100);
-        } catch (error) {
-            console.error('Error creating project:', error);
-            alert('Failed to create project. Please try again.');
-        }
+        this.projects.push(newProject);
+        this.renderDashboard();
+        this.viewProject(newProject.id);
+        
+        // Automatically enter edit mode for new project
+        setTimeout(() => {
+            this.editProject(newProject.id);
+        }, 100);
     }
 
     editProject(projectId) {
@@ -1724,7 +1888,7 @@ export class AcesApps {
         });
     }
 
-    async saveProjectChanges() {
+    saveProjectChanges() {
         if (!this.currentProject) return;
 
         // Update project data with edited content
@@ -1875,17 +2039,10 @@ export class AcesApps {
             console.error('Project not found in array:', project.id);
         }
         
-        // Save to database
-        try {
-            await this.db.updateProject(project.id, project);
-            console.log('Project changes saved to database for:', project.name);
-        } catch (error) {
-            console.error('Error saving project to database:', error);
-            alert('Failed to save project changes. Please try again.');
-        }
-        
         // Update dashboard to reflect changes
         this.renderDashboard();
+        
+        console.log('Project changes saved for:', project.name);
     }
 
     // Export functionality
@@ -2136,42 +2293,27 @@ export class AcesApps {
         this.renderDashboard();
     }
 
-    async deleteProject(projectId) {
+    deleteProject(projectId) {
         if (!confirm('Are you sure you want to delete this project?')) return;
         
-        try {
-            await this.db.deleteProject(projectId);
-            this.projects = this.projects.filter(p => p.id !== projectId);
-            this.renderDashboard();
-            console.log('Project deleted from database:', projectId);
-        } catch (error) {
-            console.error('Error deleting project from database:', error);
-            alert('Failed to delete project. Please try again.');
-        }
+        this.projects = this.projects.filter(p => p.id !== projectId);
+        this.renderDashboard();
     }
 
-    async handleFileUpload(files) {
-        // File upload handling with Supabase Storage
-        Array.from(files).forEach(async (file) => {
-            try {
-                const fileData = await this.db.uploadFile(this.currentProject.id, file, {
-                    description: '',
-                    tags: []
-                });
-                
-                // Add file to current project
-                if (!this.currentProject.files) {
-                    this.currentProject.files = [];
-                }
+    handleFileUpload(files) {
+        // Basic file upload handling
+        Array.from(files).forEach(file => {
+            const fileData = {
+                name: file.name,
+                type: file.name.split('.').pop(),
+                size: this.formatFileSize(file.size),
+                date: new Date().toISOString().split('T')[0],
+                url: URL.createObjectURL(file)
+            };
+            
+            if (this.currentProject) {
                 this.currentProject.files.push(fileData);
-                
-                // Re-render files tab
                 this.renderFilesTab();
-                
-                console.log('File uploaded successfully:', file.name);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-                alert(`Failed to upload ${file.name}. Please try again.`);
             }
         });
     }

@@ -1,152 +1,128 @@
-# PromptFlow - Prompt Engineering Portfolio Platform
+# Aces Apps - Prompt Engineering Portfolio Platform
 
-A modern SaaS-style Single Page Application for managing prompt engineering projects, inspired by Jira, Atlassian, and Slack design principles.
+A modern SaaS-style Single Page Application for managing prompt engineering projects with Supabase integration.
 
 ## Features
 
-### 🎯 Core Functionality
-- **Three-Pane Layout**: Collapsible sidebar, header bar, and main content area
-- **Project Management**: Create, view, edit, clone, and delete projects
-- **CSV Import**: Import projects from pipe-delimited CSV files
-- **Rich Project Details**: Comprehensive project information across multiple tabs
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
+- **Dashboard View**: Sortable, filterable project table with status indicators
+- **Project Detail View**: Comprehensive project management with tabbed interface
+- **Inline Editing**: Edit all project content directly in the interface
+- **Dynamic Content**: Add/remove pricing tiers, case studies, metrics, and testimonials
+- **File Management**: Drag & drop file upload with Supabase Storage
+- **CSV Import/Export**: Import projects from pipe-delimited CSV files
+- **Dark Mode**: Black, grey, and white theme with smooth transitions
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 
-### 📊 Dashboard Features
-- **Projects Table**: Sortable, filterable table with project overview
-- **Statistics Bar**: Real-time project counts by status
-- **Search & Filter**: Find projects by name, description, or status
-- **Bulk Actions**: Select multiple projects for batch operations
+## Tech Stack
 
-### 📋 Project Detail Tabs
-- **Overview**: Vision, problem statement, target audience, success metrics, requirements, architecture, timeline, resources
-- **Prompt Kit**: Specifications, acceptance criteria, sample data, examples, coding standards, API specs, testing strategy, security
-- **Sales Pre-Launch**: Executive summary, market analysis, value proposition, features, pricing, timeline, risk assessment
-- **Sales Post-Launch**: Demo links, case studies, metrics, testimonials, ROI calculator, differentiation, next steps
-- **Files**: File management with drag-and-drop upload
+- **Frontend**: Vanilla HTML, CSS, JavaScript (ES6 modules)
+- **Backend**: Supabase (PostgreSQL + Storage)
+- **Styling**: Modern CSS with custom properties and responsive design
+- **Deployment**: Vercel
 
-### 📁 CSV Import
-Supports pipe-delimited CSV files with the following columns:
-- Project_Name, Status, Description, Tech_Stack, Completion_Percentage, Priority
-- Vision, Problem_Statement, Target_Audience, Success_Metrics, Requirements, Architecture
-- Timeline_Phases, Resources, Specifications, Acceptance_Criteria, Sample_Data, Examples
-- Coding_Standards, API_Specs, Testing_Strategy, Security_Requirements
-- Executive_Summary, Market_Analysis, Value_Proposition, Features_List, Pricing_Model
-- Development_Timeline, Risk_Assessment, Demo_Links, Case_Studies, Success_Metrics_Achieved
-- Customer_Testimonials, ROI_Calculator, Competitive_Differentiation, Next_Steps
-- File_Names, File_Types, File_URLs
+## Setup Instructions
 
-## Getting Started
+### 1. Supabase Setup
 
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- No server required - runs entirely in the browser
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Go to Settings > API to get your project URL and anon key
+3. Run the SQL schema in your Supabase SQL Editor:
 
-### Installation
-1. Clone or download the repository
-2. Open `index.html` in your web browser
-3. Start managing your prompt engineering projects!
+```sql
+-- Copy and paste the contents of supabase-schema.sql
+```
 
-### Usage
+4. Update `supabase-config.js` with your credentials:
 
-#### Creating a New Project
-1. Click the "New Project" button in the sidebar
-2. Enter a project name
-3. The project will be created with default "Idea" status
-4. Click on the project to view and edit details
+```javascript
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+```
 
-#### Importing Projects from CSV
-1. Click the "Import CSV" button in the sidebar
-2. Select a pipe-delimited CSV file
-3. Preview the data in the modal
-4. Click "Import Projects" to add them to your portfolio
+### 2. Local Development
 
-#### Managing Projects
-- **View**: Click on any project in the sidebar or table to view details
-- **Edit**: Use the edit button in project actions
-- **Clone**: Duplicate an existing project
-- **Delete**: Remove a project (with confirmation)
+1. Clone the repository
+2. Install dependencies (optional for local development):
+   ```bash
+   npm install
+   ```
+3. Start a local server:
+   ```bash
+   python -m http.server 8000
+   # or
+   npm run dev
+   ```
+4. Open [http://localhost:8000](http://localhost:8000)
 
-#### Project Status
-- **Current**: Active projects in development
-- **Completed**: Finished projects
-- **Ideas**: Project concepts and planning
+### 3. Environment Variables
+
+For production deployment on Vercel, add these environment variables:
+
+- `SUPABASE_URL`: Your Supabase project URL
+- `SUPABASE_ANON_KEY`: Your Supabase anon key
+
+## Database Schema
+
+The application uses two main tables:
+
+### Projects Table
+- `id`: UUID primary key
+- `name`: Project name
+- `status`: current/completed/idea
+- `description`: Project description
+- `tech_stack`: Array of technologies
+- `completion_percentage`: 0-100
+- `overview`: JSONB with project overview data
+- `prompt_kit`: JSONB with prompt kit data
+- `sales_pre_launch`: JSONB with pre-launch sales data
+- `sales_post_launch`: JSONB with post-launch sales data
+- `created_at`: Timestamp
+- `updated_at`: Timestamp
+
+### Project Files Table
+- `id`: UUID primary key
+- `project_id`: Foreign key to projects
+- `name`: File name
+- `type`: MIME type
+- `size`: File size in bytes
+- `url`: Public URL
+- `storage_path`: Storage path in Supabase Storage
+- `created_at`: Timestamp
 
 ## File Structure
 
 ```
-PromptFlow/
-├── index.html          # Main HTML file
-├── styles.css          # CSS styles and theming
-├── script.js           # JavaScript application logic
-├── sample-projects.csv # Example CSV file for testing
-└── README.md          # This file
+aces-apps/
+├── index.html              # Main HTML file
+├── styles.css              # All CSS styles
+├── script.js               # Main application logic
+├── database-api.js         # Supabase API functions
+├── supabase-config.js      # Supabase configuration
+├── supabase-schema.sql     # Database schema
+├── package.json            # Node.js dependencies
+└── README.md              # This file
 ```
 
-## Technical Details
+## Usage
 
-### Built With
-- **HTML5**: Semantic markup and structure
-- **CSS3**: Modern styling with CSS Grid, Flexbox, and custom properties
-- **Vanilla JavaScript**: No frameworks, pure ES6+ JavaScript
-- **Font Awesome**: Icons and visual elements
+1. **Create Projects**: Click "New Project" to create a new project
+2. **Import CSV**: Use "Import CSV" to bulk import projects
+3. **Edit Projects**: Click on a project to view details, then click "Edit"
+4. **Manage Files**: Upload files using drag & drop in the Files tab
+5. **Filter Projects**: Use the status filter buttons to filter by status
+6. **Search**: Use the search bar to find projects by name or description
 
-### Browser Support
-- Chrome 60+
-- Firefox 55+
-- Safari 12+
-- Edge 79+
+## Deployment
 
-### Data Storage
-- Projects are stored in browser's local storage
-- Data persists between sessions
-- No external dependencies or server required
-
-## Sample Data
-
-The application includes 3 sample projects:
-1. **AI Fitness Tracker** (Current, 65% complete)
-2. **E-commerce Dashboard** (Completed, 100%)
-3. **Smart Home Hub** (Idea, 5% complete)
-
-## Customization
-
-### Styling
-The application uses CSS custom properties for easy theming. Modify the `:root` variables in `styles.css`:
-
-```css
-:root {
-    --primary: #0052cc;
-    --primary-hover: #0065ff;
-    --success: #00875a;
-    --warning: #ff8b00;
-    --danger: #de350b;
-    /* ... more variables */
-}
-```
-
-### Adding Features
-The application is built with a modular class-based architecture. Key methods:
-- `renderDashboard()`: Updates the main dashboard view
-- `viewProject(id)`: Switches to project detail view
-- `importCsvProjects()`: Handles CSV import functionality
-- `mapCsvToProject(row)`: Maps CSV data to project structure
+The app is deployed on Vercel and automatically updates when you push to the main branch.
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+4. Submit a pull request
 
 ## License
 
-This project is open source and available under the MIT License.
-
-## Support
-
-For questions, issues, or feature requests, please open an issue in the repository.
-
----
-
-Built with ❤️ for the prompt engineering community.
+MIT License - see LICENSE file for details
