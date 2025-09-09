@@ -1,9 +1,6 @@
 -- Supabase Database Schema for Aces Apps
 -- Run this in your Supabase SQL Editor
 
--- Enable Row Level Security
-ALTER DATABASE postgres SET "app.jwt_secret" TO 'your-jwt-secret';
-
 -- Create projects table
 CREATE TABLE IF NOT EXISTS projects (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
