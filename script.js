@@ -289,39 +289,39 @@ export class AcesApps {
 
     renderOverviewTab() {
         const project = this.currentProject;
-        document.getElementById('overview-vision').textContent = project.overview.vision;
-        document.getElementById('overview-problem').textContent = project.overview.problemStatement;
-        document.getElementById('overview-audience').textContent = project.overview.targetAudience;
+        document.getElementById('overview-vision').textContent = project.vision || '';
+        document.getElementById('overview-problem').textContent = project.problem_statement || '';
+        document.getElementById('overview-audience').textContent = project.target_audience || '';
         
         document.getElementById('overview-metrics').innerHTML = 
-            project.overview.successMetrics.map(metric => `<li>${metric}</li>`).join('');
+            (project.success_metrics || []).map(metric => `<li>${metric}</li>`).join('');
         
         document.getElementById('overview-requirements').innerHTML = 
-            project.overview.requirements.map(req => `<li>${req}</li>`).join('');
+            (project.requirements || []).map(req => `<li>${req}</li>`).join('');
         
-        document.getElementById('overview-architecture').textContent = project.overview.architecture;
+        document.getElementById('overview-architecture').textContent = project.architecture || '';
         
         document.getElementById('overview-timeline').innerHTML = 
-            project.overview.timeline.map(item => `
+            Array.isArray(project.timeline_phases) ? project.timeline_phases.map(item => `
                 <div class="timeline-item">
                     <div class="timeline-phase">${item.phase}</div>
                     <div class="timeline-duration">${item.duration}</div>
                     <div class="timeline-status ${item.status.replace('-', '-')}">${item.status}</div>
                 </div>
-            `).join('');
+            `).join('') : '';
         
-        document.getElementById('overview-resources').textContent = project.overview.resources;
+        document.getElementById('overview-resources').textContent = project.resources || '';
     }
 
     renderPromptKitTab() {
         const project = this.currentProject;
-        document.getElementById('prompt-specifications').textContent = project.promptKit.specifications;
+        document.getElementById('prompt-specifications').textContent = project.specifications || '';
         
         document.getElementById('prompt-criteria').innerHTML = 
-            project.promptKit.acceptanceCriteria.map(criteria => `<li>${criteria}</li>`).join('');
+            (project.acceptance_criteria || []).map(criteria => `<li>${criteria}</li>`).join('');
         
         // Format JSON sample data
-        const sampleData = project.promptKit.sampleData;
+        const sampleData = project.sample_data;
         const sampleDataElement = document.getElementById('prompt-sample-data');
         
         if (sampleData) {
@@ -367,25 +367,25 @@ export class AcesApps {
         
         
         document.getElementById('prompt-standards').innerHTML = 
-            project.promptKit.codingStandards.map(standard => `<li>${standard}</li>`).join('');
+            (project.coding_standards || []).map(standard => `<li>${standard}</li>`).join('');
         
         document.getElementById('prompt-api').innerHTML = 
-            project.promptKit.apiSpecs.map(spec => `<li>${spec}</li>`).join('');
+            (project.api_specs || []).map(spec => `<li>${spec}</li>`).join('');
         
-        document.getElementById('prompt-testing').textContent = project.promptKit.testingStrategy;
-        document.getElementById('prompt-security').textContent = project.promptKit.security;
+        document.getElementById('prompt-testing').textContent = project.testing_strategy || '';
+        document.getElementById('prompt-security').textContent = project.security_requirements || '';
     }
 
     renderSalesPreTab() {
         const project = this.currentProject;
-        document.getElementById('sales-pre-summary').textContent = project.salesPackPre.executiveSummary;
-        document.getElementById('sales-pre-market').textContent = project.salesPackPre.marketAnalysis;
-        document.getElementById('sales-pre-value').textContent = project.salesPackPre.valueProposition;
+        document.getElementById('sales-pre-summary').textContent = project.executive_summary || '';
+        document.getElementById('sales-pre-market').textContent = project.market_analysis || '';
+        document.getElementById('sales-pre-value').textContent = project.value_proposition || '';
         
         document.getElementById('sales-pre-features').innerHTML = 
-            project.salesPackPre.features.map(feature => `<li>${feature}</li>`).join('');
+            (project.features_list || []).map(feature => `<li>${feature}</li>`).join('');
         
-        const pricing = project.salesPackPre.pricing;
+        const pricing = project.pricing_model || {};
         let pricingHtml = '';
         
         // Get all pricing tiers dynamically
@@ -410,45 +410,45 @@ export class AcesApps {
         
         document.getElementById('sales-pre-pricing').innerHTML = pricingHtml;
         
-        document.getElementById('sales-pre-timeline').textContent = project.salesPackPre.timeline;
-        document.getElementById('sales-pre-risks').textContent = project.salesPackPre.riskAssessment;
+        document.getElementById('sales-pre-timeline').textContent = project.development_timeline || '';
+        document.getElementById('sales-pre-risks').textContent = project.risk_assessment || '';
     }
 
     renderSalesPostTab() {
         const project = this.currentProject;
-        document.getElementById('sales-post-demos').textContent = project.salesPackPost.demos;
+        document.getElementById('sales-post-demos').textContent = (project.demo_links || []).join(', ');
         
         document.getElementById('sales-post-cases').innerHTML = 
-            project.salesPackPost.caseStudies.map(caseStudy => `
+            Array.isArray(project.case_studies) ? project.case_studies.map(caseStudy => `
                 <div class="case-study">
                     <div class="case-study-client">${caseStudy.client}</div>
                     <div class="case-study-result">${caseStudy.result}</div>
                 </div>
-            `).join('');
+            `).join('') : '';
         
         document.getElementById('sales-post-metrics').innerHTML = 
-            project.salesPackPost.metrics.map(metric => `
+            Array.isArray(project.success_metrics_achieved) ? project.success_metrics_achieved.map(metric => `
                 <div class="metric-item">
                     <div class="metric-label">${metric.label}</div>
                     <div class="metric-value">${metric.value}</div>
                     <div class="metric-benchmark">vs ${metric.benchmark} industry</div>
                 </div>
-            `).join('');
+            `).join('') : '';
         
         document.getElementById('sales-post-testimonials').innerHTML = 
-            project.salesPackPost.testimonials.map(testimonial => `
+            Array.isArray(project.customer_testimonials) ? project.customer_testimonials.map(testimonial => `
                 <div class="testimonial">
                     <div class="testimonial-quote">${testimonial.quote}</div>
                     <div class="testimonial-author">- ${testimonial.author}</div>
                 </div>
-            `).join('');
+            `).join('') : '';
         
-        document.getElementById('sales-post-roi').textContent = project.salesPackPost.roiCalculator;
+        document.getElementById('sales-post-roi').textContent = project.roi_calculator || '';
         
         document.getElementById('sales-post-diff').innerHTML = 
-            project.salesPackPost.differentiation.map(point => `<li>${point}</li>`).join('');
+            (project.competitive_differentiation || []).map(point => `<li>${point}</li>`).join('');
         
-        document.getElementById('sales-post-next').textContent = project.salesPackPost.nextSteps;
+        document.getElementById('sales-post-next').textContent = project.next_steps || '';
     }
 
     renderFilesTab() {
