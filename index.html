@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aces Apps - Prompt Engineering Portfolio Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="header">
+                <div class="header-left">
+                    <div class="logo">
+                        <i class="fas fa-bolt"></i>
+                        <span class="logo-text">Aces Apps</span>
+                    </div>
+                    <nav class="breadcrumb" id="breadcrumb">
+                        <span class="breadcrumb-item">Dashboard</span>
+                    </nav>
+                </div>
+                <div class="header-center">
+                    <div class="search-container full-width">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search projects..." id="searchInput">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="newProjectBtn">
+                        <i class="fas fa-plus"></i>
+                        New Project
+                    </button>
+                    <button class="btn btn-secondary" id="importCsvBtn">
+                        <i class="fas fa-upload"></i>
+                        Import CSV
+                    </button>
+                    <button class="btn btn-icon" title="Export">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="btn btn-icon" id="themeToggle" title="Toggle Theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-icon" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard View -->
+                <div class="dashboard-view" id="dashboardView">
+                    <div class="dashboard-header">
+                        <h1>Projects Dashboard</h1>
+                        <div class="stats-bar">
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalProjects">0</span>
+                                <span class="stat-label">Total Projects</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="currentProjectsCount">0</span>
+                                <span class="stat-label">Current</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="completedProjectsCount">0</span>
+                                <span class="stat-label">Completed</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="ideasProjectsCount">0</span>
+                                <span class="stat-label">Ideas</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-controls">
+                        <div class="filter-group">
+                            <div class="status-filter-buttons">
+                                <button class="status-filter-btn active" data-status="">All</button>
+                                <button class="status-filter-btn" data-status="current">Current</button>
+                                <button class="status-filter-btn" data-status="completed">Completed</button>
+                                <button class="status-filter-btn" data-status="idea">Ideas</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="projects-table-container">
+                        <table class="projects-table">
+                            <thead>
+                                <tr>
+                                    <th class="name-col">Project Name</th>
+                                    <th class="status-col">Status</th>
+                                    <th class="progress-col">Progress</th>
+                                    <th class="tech-col">Tech Stack</th>
+                                    <th class="modified-col">Last Modified</th>
+                                    <th class="actions-col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projectsTableBody">
+                                <!-- Projects will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Project Detail View -->
+                <div class="project-detail-view" id="projectDetailView" style="display: none;">
+                    <div class="project-header">
+                        <div class="project-title">
+                            <h1 id="projectDetailTitle">Project Name</h1>
+                            <div class="project-meta">
+                                <span class="status-badge" id="projectDetailStatus">Current</span>
+                                <span class="progress-text" id="projectDetailProgress">65% Complete</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn btn-secondary" id="editProjectBtn">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                            <button class="btn btn-secondary" id="cloneProjectBtn">
+                                <i class="fas fa-copy"></i>
+                                Clone
+                            </button>
+                            <button class="btn btn-danger" id="deleteProjectBtn">
+                                <i class="fas fa-trash"></i>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="project-tabs">
+                        <nav class="tab-nav">
+                            <button class="tab-btn active" data-tab="overview">
+                                <i class="fas fa-chart-line"></i>
+                                Overview
+                            </button>
+                            <button class="tab-btn" data-tab="prompt-kit">
+                                <i class="fas fa-code"></i>
+                                Prompt Kit
+                            </button>
+                            <button class="tab-btn" data-tab="sales-pre">
+                                <i class="fas fa-rocket"></i>
+                                Sales Pre-Launch
+                            </button>
+                            <button class="tab-btn" data-tab="sales-post">
+                                <i class="fas fa-chart-bar"></i>
+                                Sales Post-Launch
+                            </button>
+                            <button class="tab-btn" data-tab="files">
+                                <i class="fas fa-folder"></i>
+                                Files
+                            </button>
+                        </nav>
+
+                        <div class="tab-content">
+                            <!-- Overview Tab -->
+                            <div class="tab-pane active" id="overview-tab">
+                                <div class="content-section">
+                                    <h2>Vision</h2>
+                                    <div class="content-text" id="overview-vision">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Problem Statement</h2>
+                                    <div class="content-text" id="overview-problem">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Target Audience</h2>
+                                    <div class="content-text" id="overview-audience">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Success Metrics</h2>
+                                    <ul class="content-list" id="overview-metrics">Loading...</ul>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Requirements</h2>
+                                    <ul class="content-list" id="overview-requirements">Loading...</ul>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Architecture</h2>
+                                    <div class="content-text" id="overview-architecture">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Timeline</h2>
+                                    <div class="timeline" id="overview-timeline">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Resources</h2>
+                                    <div class="content-text" id="overview-resources">Loading...</div>
+                                </div>
+                            </div>
+
+                            <!-- Prompt Kit Tab -->
+                            <div class="tab-pane" id="prompt-kit-tab">
+                                <div class="content-section">
+                                    <h2>Specifications</h2>
+                                    <div class="content-text" id="prompt-specifications">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Acceptance Criteria</h2>
+                                    <ul class="content-list" id="prompt-criteria">Loading...</ul>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Sample Data</h2>
+                                    <pre class="code-block" id="prompt-sample-data">Loading...</pre>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Coding Standards</h2>
+                                    <ul class="content-list" id="prompt-standards">Loading...</ul>
+                                </div>
+                                <div class="content-section">
+                                    <h2>API Specifications</h2>
+                                    <ul class="content-list" id="prompt-api">Loading...</ul>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Testing Strategy</h2>
+                                    <div class="content-text" id="prompt-testing">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Security Notes</h2>
+                                    <div class="content-text" id="prompt-security">Loading...</div>
+                                </div>
+                            </div>
+
+                            <!-- Sales Pre-Launch Tab -->
+                            <div class="tab-pane" id="sales-pre-tab">
+                                <div class="content-section">
+                                    <h2>Executive Summary</h2>
+                                    <div class="content-text" id="sales-pre-summary">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Market Analysis</h2>
+                                    <div class="content-text" id="sales-pre-market">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Value Proposition</h2>
+                                    <div class="content-text" id="sales-pre-value">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Features</h2>
+                                    <ul class="content-list" id="sales-pre-features">Loading...</ul>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Pricing</h2>
+                                    <div class="pricing-table" id="sales-pre-pricing">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Timeline</h2>
+                                    <div class="content-text" id="sales-pre-timeline">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Risk Assessment</h2>
+                                    <div class="content-text" id="sales-pre-risks">Loading...</div>
+                                </div>
+                            </div>
+
+                            <!-- Sales Post-Launch Tab -->
+                            <div class="tab-pane" id="sales-post-tab">
+                                <div class="content-section">
+                                    <h2>Demo Links</h2>
+                                    <div class="content-text" id="sales-post-demos">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Case Studies</h2>
+                                    <div class="case-studies" id="sales-post-cases">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Metrics</h2>
+                                    <div class="metrics-grid" id="sales-post-metrics">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Testimonials</h2>
+                                    <div class="testimonials" id="sales-post-testimonials">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>ROI Calculator</h2>
+                                    <div class="content-text" id="sales-post-roi">Loading...</div>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Differentiation Points</h2>
+                                    <ul class="content-list" id="sales-post-diff">Loading...</ul>
+                                </div>
+                                <div class="content-section">
+                                    <h2>Next Steps</h2>
+                                    <div class="content-text" id="sales-post-next">Loading...</div>
+                                </div>
+                            </div>
+
+                            <!-- Files Tab -->
+                            <div class="tab-pane" id="files-tab">
+                                <div class="files-upload-area" id="filesUploadArea">
+                                    <div class="upload-content">
+                                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                        <p>Drag and drop files here or click to upload</p>
+                                        <input type="file" id="fileInput" multiple style="display: none;">
+                                    </div>
+                                </div>
+                                <div class="files-grid" id="filesGrid">
+                                    <!-- Files will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- CSV Import Modal -->
+    <div class="modal" id="csvImportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Import Projects from CSV</h2>
+                <button class="modal-close" id="closeCsvModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" id="csvUploadArea">
+                    <div class="upload-content">
+                        <i class="fas fa-file-csv upload-icon"></i>
+                        <p>Choose a pipe-delimited CSV file</p>
+                        <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+                        <button class="btn btn-primary" id="selectCsvBtn">Select File</button>
+                    </div>
+                </div>
+                <div class="csv-preview" id="csvPreview" style="display: none;">
+                    <h3>Preview Data</h3>
+                    <div class="preview-table-container">
+                        <table class="preview-table" id="previewTable">
+                            <!-- Preview data will be populated here -->
+                        </table>
+                    </div>
+                    <div class="import-actions">
+                        <button class="btn btn-primary" id="confirmImportBtn">Import Projects</button>
+                        <button class="btn btn-secondary" id="cancelImportBtn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
