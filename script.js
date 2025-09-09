@@ -761,7 +761,7 @@ export class AcesApps {
         };
     }
 
-    importCsvProjects() {
+    async importCsvProjects() {
         if (!this.csvImportData || this.csvImportData.length === 0) {
             alert('No data to import.');
             return;
@@ -771,33 +771,37 @@ export class AcesApps {
         let errorCount = 0;
         const errors = [];
 
-        this.csvImportData.forEach((row, index) => {
+        // Process each row and create projects in Supabase
+        for (let index = 0; index < this.csvImportData.length; index++) {
+            const row = this.csvImportData[index];
             try {
                 // Validate required fields
                 if (!row.Project_Name || !row.Status) {
                     errors.push(`Row ${index + 1}: Missing required fields (Project_Name, Status)`);
                     errorCount++;
-                    return;
+                    continue;
                 }
 
                 // Map CSV data to project structure
-                const project = this.mapCsvToProject(row);
+                const projectData = this.mapCsvToProject(row);
                 
-                // Check for duplicate names
-                const existingProject = this.projects.find(p => p.name === project.name);
+                // Check for duplicate names in current projects
+                const existingProject = this.projects.find(p => p.name === projectData.name);
                 if (existingProject) {
-                    errors.push(`Row ${index + 1}: Project "${project.name}" already exists`);
+                    errors.push(`Row ${index + 1}: Project "${projectData.name}" already exists`);
                     errorCount++;
-                    return;
+                    continue;
                 }
 
-                this.projects.push(project);
+                // Create project in Supabase
+                const newProject = await this.db.createProject(projectData);
+                this.projects.push(newProject);
                 importedCount++;
             } catch (error) {
                 errors.push(`Row ${index + 1}: ${error.message}`);
                 errorCount++;
             }
-        });
+        }
 
         // Show results
         let message = `Import completed!\n\nImported: ${importedCount} projects`;
@@ -1141,14 +1145,11 @@ export class AcesApps {
         };
 
         const project = {
-            id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
             name: row.Project_Name || 'Untitled Project',
             status: (row.Status || 'idea').toLowerCase(),
             description: row.Description || '',
-            techStack: parseList(row.Tech_Stack),
-            completionPercentage: parseInt(row.Completion_Percentage) || 0,
-            createdDate: new Date().toISOString().split('T')[0],
-            lastModified: new Date().toISOString().split('T')[0],
+            tech_stack: parseList(row.Tech_Stack),
+            completion_percentage: parseInt(row.Completion_Percentage) || 0,
             priority: (row.Priority || 'medium').toLowerCase(),
             overview: {
                 vision: convertBrToNewlines(row.Vision || ''),
@@ -1160,7 +1161,7 @@ export class AcesApps {
                 timeline: parseTimeline(row.Timeline_Phases),
                 resources: convertBrToNewlines(row.Resources || '')
             },
-            promptKit: {
+            prompt_kit: {
                 specifications: convertBrToNewlines(row.Specifications || ''),
                 acceptanceCriteria: parseList(row.Acceptance_Criteria),
                 sampleData: convertBrToNewlines(row.Sample_Data || ''),
@@ -1169,7 +1170,7 @@ export class AcesApps {
                 testingStrategy: convertBrToNewlines(row.Testing_Strategy || ''),
                 security: convertBrToNewlines(row.Security_Requirements || '')
             },
-            salesPackPre: {
+            sales_pre_launch: {
                 executiveSummary: convertBrToNewlines(row.Executive_Summary || ''),
                 marketAnalysis: convertBrToNewlines(row.Market_Analysis || ''),
                 valueProposition: convertBrToNewlines(row.Value_Proposition || ''),
@@ -1178,7 +1179,7 @@ export class AcesApps {
                 timeline: convertBrToNewlines(row.Development_Timeline || ''),
                 riskAssessment: convertBrToNewlines(row.Risk_Assessment || '')
             },
-            salesPackPost: {
+            sales_post_launch: {
                 demos: convertBrToNewlines(row.Demo_Links || ''),
                 caseStudies: parseCaseStudies(row.Case_Studies),
                 metrics: parseMetrics(row.Success_Metrics_Achieved),
@@ -1186,8 +1187,7 @@ export class AcesApps {
                 roiCalculator: convertBrToNewlines(row.ROI_Calculator || ''),
                 differentiation: parseList(row.Competitive_Differentiation),
                 nextSteps: convertBrToNewlines(row.Next_Steps || '')
-            },
-            files: parseFiles(row.File_Names, row.File_Types, row.File_URLs)
+            }
         };
 
         return project;
@@ -1215,7 +1215,7 @@ export class AcesApps {
                 timeline: [],
                 resources: ''
             },
-            promptKit: {
+            prompt_kit: {
                 specifications: '',
                 acceptanceCriteria: [],
                 sampleData: '',
@@ -1224,7 +1224,7 @@ export class AcesApps {
                 testingStrategy: '',
                 security: ''
             },
-            salesPackPre: {
+            sales_pre_launch: {
                 executiveSummary: '',
                 marketAnalysis: '',
                 valueProposition: '',
@@ -1233,7 +1233,7 @@ export class AcesApps {
                 timeline: '',
                 riskAssessment: ''
             },
-            salesPackPost: {
+            sales_post_launch: {
                 demos: '',
                 caseStudies: [],
                 metrics: [],
@@ -1241,8 +1241,7 @@ export class AcesApps {
                 roiCalculator: '',
                 differentiation: [],
                 nextSteps: ''
-            },
-            files: []
+            }
         };
         
         try {
