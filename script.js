@@ -2198,5 +2198,4 @@ export class AcesApps {
     }
 }
 
-// Initialize the application
-const app = new AcesApps();
+// Application class is exported and initialized in HTML
