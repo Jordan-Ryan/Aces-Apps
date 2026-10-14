@@ -1,122 +1,64 @@
-# Supabase Setup Guide for Aces Apps
+# Supabase setup
 
-## 🚀 Quick Setup Steps
+The page reads `supabaseUrl` and `supabaseKey` from `supabase-config.js`. It does not read `SUPABASE_URL`, `SUPABASE_ANON_KEY`, or any other environment variable.
 
-### 1. Create Supabase Project
-1. Go to [supabase.com](https://supabase.com) and sign up/login
-2. Click "New Project"
-3. Choose your organization
-4. Enter project details:
-   - **Name**: `aces-apps`
-   - **Database Password**: Generate a strong password
-   - **Region**: Choose closest to your users
-5. Click "Create new project"
-6. Wait for the project to be ready (2-3 minutes)
+## 1. Create a project
 
-### 2. Get Your Credentials
-1. Go to **Settings** → **API**
-2. Copy your **Project URL** and **anon public** key
-3. Update `supabase-config.js`:
+1. Create a project in the Supabase dashboard.
+2. In **Project Settings → API**, copy the project URL and the anon public key.
+3. Set those values in `supabase-config.js`:
 
 ```javascript
 const supabaseUrl = 'https://your-project-id.supabase.co';
-const supabaseKey = 'your-anon-key-here';
+const supabaseKey = 'your-anon-key';
 ```
 
-### 3. Set Up Database Schema
-1. Go to **SQL Editor** in your Supabase dashboard
-2. Copy the entire contents of `supabase-schema.sql`
-3. Paste it into the SQL Editor
-4. Click **Run** to execute the schema
+The checked-in file already assigns both constants. Replace them to use a different project. Do not commit a new key into docs or logs.
 
-### 4. Set Up File Storage
-1. Go to **Storage** in your Supabase dashboard
-2. The `project-files` bucket should be created automatically by the schema
-3. If not, create it manually:
-   - Click "New bucket"
-   - Name: `project-files`
-   - Make it **Public**
+## 2. Create the tables
 
-### 5. Test Your Setup
-1. Open your app at [https://aces-apps.vercel.app/](https://aces-apps.vercel.app/)
-2. Try creating a new project
-3. Check your Supabase dashboard to see the data appear
+In the Supabase SQL editor, run `supabase-schema-correct.sql`.
 
-## 🔧 Environment Variables (for Vercel)
+That script:
 
-Add these to your Vercel project settings:
+- drops `project_files` and `projects` if they exist, then creates them again
+- adds checks for `status` (`current`, `completed`, `idea`), `completion_percentage` (0–100), and `priority` (`low`, `medium`, `high`)
+- enables row level security and creates policies that allow all operations
+- creates `update_updated_at_column` and a trigger on `projects`
+- inserts a public storage bucket named `project-files` and a storage policy for that bucket
 
-1. Go to your Vercel dashboard
-2. Select your `aces-apps` project
-3. Go to **Settings** → **Environment Variables**
-4. Add:
-   - `SUPABASE_URL`: Your project URL
-   - `SUPABASE_ANON_KEY`: Your anon key
+Running it removes existing rows in those two tables.
 
-## 📊 Database Tables Created
+`database-api.js` uses the table names `projects` and `project_files` and the bucket name `project-files`.
 
-### `projects` table
-- Stores all project data including overview, prompt kit, and sales information
-- Uses JSONB for complex nested data
-- Includes timestamps and status tracking
+### Which schema file
 
-### `project_files` table
-- Stores file metadata for each project
-- Links to Supabase Storage for actual file content
-- Includes file type, size, and URL information
+Use `supabase-schema-correct.sql` for this page. `script.js` tab renderers and `mapCsvToProject` use its flat columns, including `timeline_phases`, `success_metrics` and `requirements` as text arrays, `sample_data` as text, and `roi_calculator` as text.
 
-## 🔒 Security Notes
+The other two files in the repo are different:
 
-- Row Level Security (RLS) is enabled
-- Currently allows all operations (you may want to restrict this)
-- Files are stored in a public bucket (consider private for sensitive data)
-- All API calls use the anon key (consider implementing user authentication)
+| File | Shape |
+| --- | --- |
+| `supabase-schema.sql` | Flat columns, with `timeline` instead of `timeline_phases`, and several fields typed as `JSONB` or plain `TEXT` where the correct file uses arrays |
+| `supabase-schema-simple.sql` | Nested `JSONB` columns `overview`, `prompt_kit`, `sales_pre_launch`, and `sales_post_launch` |
 
-## 🚨 Troubleshooting
+## 3. Storage bucket
 
-### Common Issues:
+After the SQL runs, **Storage** should list a public bucket named `project-files`. The insert uses `ON CONFLICT (id) DO NOTHING`, so an existing bucket with that id is left as it is.
 
-1. **"Failed to fetch projects"**
-   - Check your Supabase URL and key
-   - Ensure the database schema was created successfully
-   - Check browser console for specific error messages
+`DatabaseAPI.uploadFile` uploads to `project-files` at `{projectId}/{timestamp}.{ext}` and stores `name`, `type`, `size`, `url`, and `storage_path` on `project_files`.
 
-2. **"Failed to upload file"**
-   - Verify the `project-files` bucket exists
-   - Check that the bucket is public
-   - Ensure file size is under 5MB
+## 4. Load the page
 
-3. **"Failed to create project"**
-   - Check that the `projects` table exists
-   - Verify RLS policies are set correctly
-   - Check browser console for validation errors
+Serve the repo and open the site as described in `README.md`. On startup, `AcesApps.loadProjects` calls `DatabaseAPI.getProjects()`. A failure is logged as `Supabase fetch projects error` and the in-memory list is set to `[]`.
 
-### Debug Steps:
-1. Open browser Developer Tools (F12)
-2. Check the Console tab for error messages
-3. Check the Network tab for failed API calls
-4. Verify your Supabase credentials are correct
+Browser checks when a request fails:
 
-## 📈 Next Steps
+- the URL and anon key in `supabase-config.js`
+- whether `supabase-schema-correct.sql` has been applied
+- the console and the network call to the Supabase REST API
+- that `https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2` loaded, because `supabase-config.js` throws if `window.supabase` is missing
 
-1. **Add User Authentication** (optional)
-   - Implement Supabase Auth
-   - Add user-specific project access
-   - Update RLS policies
+## Policies
 
-2. **Add Real-time Updates**
-   - Enable real-time subscriptions
-   - Update UI when data changes
-
-3. **Add Data Validation**
-   - Implement client-side validation
-   - Add server-side validation with Supabase functions
-
-4. **Optimize Performance**
-   - Add database indexes
-   - Implement pagination
-   - Add caching
-
-## 🎉 You're Ready!
-
-Your Aces Apps is now connected to Supabase! All project data will be stored in the cloud and persist across sessions.
+Row level security is on. The policies in `supabase-schema-correct.sql` use `USING (true)` for all commands on `projects`, `project_files`, and objects in the `project-files` bucket. The bucket is created with `public` set to true. The client uses the anon key.

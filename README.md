@@ -1,128 +1,99 @@
-# Aces Apps - Prompt Engineering Portfolio Platform
+# Aces Apps
 
-A modern SaaS-style Single Page Application for managing prompt engineering projects with Supabase integration.
+Static single-page app for listing prompt-engineering projects and opening a tabbed detail view. The browser entry is `index.html`. Project rows are loaded from Supabase.
 
-## Features
+## Run locally
 
-- **Dashboard View**: Sortable, filterable project table with status indicators
-- **Project Detail View**: Comprehensive project management with tabbed interface
-- **Inline Editing**: Edit all project content directly in the interface
-- **Dynamic Content**: Add/remove pricing tiers, case studies, metrics, and testimonials
-- **File Management**: Drag & drop file upload with Supabase Storage
-- **CSV Import/Export**: Import projects from pipe-delimited CSV files
-- **Dark Mode**: Black, grey, and white theme with smooth transitions
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+The page loads `script.js` as an ES module, so open it through an HTTP server. A `file://` URL will not load the module.
 
-## Tech Stack
+`package.json` defines both `dev` and `start` as:
 
-- **Frontend**: Vanilla HTML, CSS, JavaScript (ES6 modules)
-- **Backend**: Supabase (PostgreSQL + Storage)
-- **Styling**: Modern CSS with custom properties and responsive design
-- **Deployment**: Vercel
-
-## Setup Instructions
-
-### 1. Supabase Setup
-
-1. Create a new project at [supabase.com](https://supabase.com)
-2. Go to Settings > API to get your project URL and anon key
-3. Run the SQL schema in your Supabase SQL Editor:
-
-```sql
--- Copy and paste the contents of supabase-schema.sql
+```bash
+python -m http.server 8000
 ```
 
-4. Update `supabase-config.js` with your credentials:
-
-```javascript
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+```bash
+npm run dev
 ```
 
-### 2. Local Development
+If `python` is not on `PATH`, run the same server with:
 
-1. Clone the repository
-2. Install dependencies (optional for local development):
-   ```bash
-   npm install
-   ```
-3. Start a local server:
-   ```bash
-   python -m http.server 8000
-   # or
-   npm run dev
-   ```
-4. Open [http://localhost:8000](http://localhost:8000)
-
-### 3. Environment Variables
-
-For production deployment on Vercel, add these environment variables:
-
-- `SUPABASE_URL`: Your Supabase project URL
-- `SUPABASE_ANON_KEY`: Your Supabase anon key
-
-## Database Schema
-
-The application uses two main tables:
-
-### Projects Table
-- `id`: UUID primary key
-- `name`: Project name
-- `status`: current/completed/idea
-- `description`: Project description
-- `tech_stack`: Array of technologies
-- `completion_percentage`: 0-100
-- `overview`: JSONB with project overview data
-- `prompt_kit`: JSONB with prompt kit data
-- `sales_pre_launch`: JSONB with pre-launch sales data
-- `sales_post_launch`: JSONB with post-launch sales data
-- `created_at`: Timestamp
-- `updated_at`: Timestamp
-
-### Project Files Table
-- `id`: UUID primary key
-- `project_id`: Foreign key to projects
-- `name`: File name
-- `type`: MIME type
-- `size`: File size in bytes
-- `url`: Public URL
-- `storage_path`: Storage path in Supabase Storage
-- `created_at`: Timestamp
-
-## File Structure
-
-```
-aces-apps/
-├── index.html              # Main HTML file
-├── styles.css              # All CSS styles
-├── script.js               # Main application logic
-├── database-api.js         # Supabase API functions
-├── supabase-config.js      # Supabase configuration
-├── supabase-schema.sql     # Database schema
-├── package.json            # Node.js dependencies
-└── README.md              # This file
+```bash
+python3 -m http.server 8000
 ```
 
-## Usage
+Then open [http://localhost:8000](http://localhost:8000).
 
-1. **Create Projects**: Click "New Project" to create a new project
-2. **Import CSV**: Use "Import CSV" to bulk import projects
-3. **Edit Projects**: Click on a project to view details, then click "Edit"
-4. **Manage Files**: Upload files using drag & drop in the Files tab
-5. **Filter Projects**: Use the status filter buttons to filter by status
-6. **Search**: Use the search bar to find projects by name or description
+`npm install` is not required to serve the page. `index.html` loads `@supabase/supabase-js` from jsDelivr (`@supabase/supabase-js@2`). `package.json` lists that package as a dependency, and the page does not import it from `node_modules`. There is no lockfile in the repo.
 
-## Deployment
+## Supabase
 
-The app is deployed on Vercel and automatically updates when you push to the main branch.
+`supabase-config.js` sets `supabaseUrl` and `supabaseKey` in source and creates the client from `window.supabase`. The page does not read environment variables. There is no `.env` file and no `vercel.json` in the repo.
 
-## Contributing
+To point the page at a project, edit those two constants. The browser must be able to load the CDN script before `script.js` runs; `index.html` retries until `window.supabase` exists.
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+Table and bucket names used by `database-api.js`:
 
-## License
+- table `projects`
+- table `project_files`
+- storage bucket `project-files`
 
-MIT License - see LICENSE file for details
+The tab renderers in `script.js` and `mapCsvToProject` read and write flat columns. Those names and types match `supabase-schema-correct.sql`. Run that file in the Supabase SQL editor when creating a database for this page. It drops and recreates `projects` and `project_files`, enables row level security, adds policies that allow all operations, and inserts a public `project-files` bucket.
+
+`supabase-schema.sql` and `supabase-schema-simple.sql` describe different column shapes. See `docs/STATE.md`. Setup steps are also in `SUPABASE_SETUP.md`.
+
+`package.json` sets `"license": "MIT"`. This repo has no `LICENSE` file.
+
+## What the page does
+
+`AcesApps` in `script.js` loads every row from `projects` on startup (`select('*')`, ordered by `updated_at` descending).
+
+The dashboard table shows name, description, status, completion percentage, the first two `tech_stack` entries, and the last modified time. Header controls:
+
+- **New Project** prompts for a name and calls `DatabaseAPI.createProject` with the object built in `createNewProject`. That object is nested; the tabs read flat columns. See `docs/STATE.md`.
+- **Import CSV** opens a modal. The parser splits each line on `|`.
+- **Export** (the download icon) downloads a comma-separated file.
+- Search hides table rows whose name and description do not contain the query. It does not call `DatabaseAPI.searchProjects`.
+- Status buttons **All**, **Current**, **Completed**, and **Ideas** hide rows in the table. They do not call `DatabaseAPI.filterProjectsByStatus`.
+- The theme button sets `data-theme` to `light` or `dark` and stores the value in `localStorage` under the key `theme`. The default is `light`.
+- Settings and the user avatar show an `alert` and do not open a panel.
+
+Opening a project switches the main area to the detail view. Tabs are Overview, Prompt Kit, Sales Pre-Launch, Sales Post-Launch, and Files. The breadcrumb is text in the header. The address bar does not change; there is no `/dashboard` or `/project/:id` route.
+
+Row actions call view, edit, clone, and delete. Delete removes the row through `DatabaseAPI.deleteProject`. Clone copies the object in memory only (`cloneProject` does not call `createProject`). The Clone button on the detail header (`#cloneProjectBtn`) has no listener.
+
+Edit mode makes the detail fields editable. Saving calls `DatabaseAPI.updateProject` with the in-memory project object. See `docs/STATE.md` for how that object differs from the flat columns the tabs read.
+
+## CSV
+
+Import expects a header row and at least one data row, separated by `|`. `mapCsvToProject` requires `Project_Name` and `Status`. A row whose name matches a project already loaded is skipped. Status and priority are lowercased. List fields split on `;` when that character is present, otherwise on `,`. `<br>` tags in text fields become newlines.
+
+Sample files in the repo use that header: `sample-projects.csv`, `test-import.csv`, and `focusflow-test.csv`.
+
+`Examples`, `File_Names`, `File_Types`, and `File_URLs` are not copied onto the inserted project. `parseFiles` is defined in `mapCsvToProject` and is not called.
+
+Export writes a quoted comma-separated file named `projects-export-YYYY-MM-DD.csv`. It is not pipe-delimited, and it omits the Examples and file columns.
+
+## Files in this repo
+
+```
+index.html
+styles.css
+script.js
+script-backup.js          # not referenced by index.html
+database-api.js
+supabase-config.js
+supabase-schema-correct.sql
+supabase-schema.sql
+supabase-schema-simple.sql
+package.json
+sample-projects.csv
+test-import.csv
+focusflow-test.csv
+README.md
+SUPABASE_SETUP.md
+AGENTS.md
+docs/STATE.md
+```
+
+`script-backup.js` is not loaded. `.next/` is tracked and is not used by `package.json`.
